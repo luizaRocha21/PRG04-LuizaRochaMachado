@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniBus — SandBox</title>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+  <!-- CSS externo geral do projeto -->
+  <link rel="stylesheet" href="../assets/css/global.css" />
+  <!-- CSS externo específico desta página -->
+  <link rel="stylesheet" href="../assets/css/sandbox.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="cabecalho">
+    <div class="container">
+      <a href="../index.html" class="marca">
+        <img src="../favicon.svg" alt="Logo UniBus" />
+        UniBus
+      </a>
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Início</a></li>
+          <li><a href="atividade-3.html">Como funciona</a></li>
+          <li><a href="sandbox.html">SandBox</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container secao">
+    <div class="sandbox-intro">
+      <span class="selo-sandbox">SandBox</span>
+      <h1>Página de testes do projeto</h1>
+      <p>
+        Espaço reservado para testar conceitos do projeto. Acessível a partir do
+        <a href="../index.html">menu principal</a>.
+      </p>
+    </div>
+
+    <section class="midia-bloco">
+      <h2>🎵 Áudio</h2>
+      <p>Elemento &lt;audio&gt; com controles, arquivo externo:</p>
+      <audio controls>
+        <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg" />
+        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
+        Seu navegador não suporta o elemento de áudio.
+      </audio>
+    </section>
+
+    <section class="midia-bloco">
+      <h2>🎬 Vídeo</h2>
+      <p>Elemento &lt;video&gt; com controles, arquivo externo:</p>
+      <video controls poster="../assets/images/rota-tarde.svg">
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+        Seu navegador não suporta o elemento de vídeo.
+      </video>
+    </section>
+
+    <section class="midia-bloco">
+      <h2>🎨 CSS Externo</h2>
+      <p>
+        Esta página consome dois arquivos CSS externos: o
+        <code>global.css</code> (compartilhado por todo o projeto) e o
+        <code>sandbox.css</code> (estilos exclusivos desta página).
+      </p>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <p>UniBus &copy; 2026 — Projeto acadêmico da disciplina PRG04 - PW.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

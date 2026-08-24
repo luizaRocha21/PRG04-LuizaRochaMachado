@@ -1,0 +1,39 @@
+/* =========================================================
+   UniBus Web — assets/css/sandbox.css
+   CSS externo específico da página de testes (SandBox).
+========================================================= */
+
+.sandbox-intro {
+  max-width: 640px;
+}
+
+.midia-bloco {
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-grande);
+  padding: 26px;
+  box-shadow: var(--sombra);
+  margin-bottom: 24px;
+}
+
+.midia-bloco h2 {
+  color: var(--amarelo-escuro);
+}
+
+.midia-bloco audio,
+.midia-bloco video {
+  width: 100%;
+  border-radius: var(--raio);
+  margin-top: 12px;
+}
+
+.selo-sandbox {
+  display: inline-block;
+  background: var(--vermelho);
+  color: var(--branco);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}

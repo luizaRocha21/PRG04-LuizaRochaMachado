@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniBus — Como funciona</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+  <!-- CSS externo do projeto -->
+  <link rel="stylesheet" href="../assets/css/global.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+
+    .imagem-dinamica-wrap {
+      text-align: center;
+    }
+    .imagem-dinamica-wrap img {
+      max-width: 100%;
+      border-radius: var(--raio-grande);
+      box-shadow: var(--sombra);
+    }
+    .imagem-dinamica-wrap button {
+      margin-top: 16px;
+    }
+    .lista-passos {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 14px;
+    }
+    .lista-passos li {
+      background: var(--branco);
+      border: 1px solid var(--linha);
+      border-radius: var(--raio);
+      padding: 14px 18px;
+    }
+    .lista-passos strong {
+      color: var(--amarelo-escuro);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho semântico, com navegação -->
+  <header class="cabecalho">
+    <div class="container">
+      <a href="../index.html" class="marca">
+        <img src="../favicon.svg" alt="Logo UniBus" />
+        UniBus
+      </a>
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Início</a></li>
+          <li><a href="atividade-3.html">Como funciona</a></li>
+          <li><a href="sandbox.html">SandBox</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container secao">
+
+    <article>
+      <h1>Como o UniBus vai funcionar</h1>
+      <p>
+        Esta página apresenta, de forma resumida, o funcionamento planejado
+        para a plataforma UniBus — o transporte universitário com rastreio
+        em tempo real.
+      </p>
+
+      <!-- Lista -->
+      <section>
+        <h2>Passo a passo do embarque</h2>
+        <ul class="lista-passos">
+          <li><strong>1. Cadastro</strong> — o estudante cria sua conta e escolhe sua rota.</li>
+          <li><strong>2. Confirmação</strong> — a coordenação valida a matrícula e libera o acesso.</li>
+          <li><strong>3. Rastreio</strong> — o app mostra o ônibus se aproximando em tempo real.</li>
+          <li><strong>4. Embarque</strong> — o motorista confirma a presença do estudante na viagem.</li>
+          <li><strong>5. Avisos</strong> — notificações de atraso, troca de rota ou chegada.</li>
+        </ul>
+      </section>
+
+      <!-- Imagem dinâmica -->
+      <section class="imagem-dinamica-wrap secao">
+        <h2>Frota em diferentes horários</h2>
+        <img
+          id="imagem-rota"
+          src="../assets/images/rota-manha.svg"
+          alt="Ilustração do ônibus universitário na rota da manhã"
+        />
+        <p id="legenda-rota">Rota 1 — Saída 07:00</p>
+        <button class="botao" id="botao-trocar-imagem" type="button">
+          Ver próximo horário →
+        </button>
+      </section>
+    </article>
+
+    <aside class="cartao">
+      <h2>Nota da atividade</h2>
+      <p>
+        Página criada para o uso de tags semânticas
+        (<code>header</code>, <code>nav</code>, <code>main</code>,
+        <code>article</code>, <code>section</code>, <code>aside</code>,
+        <code>footer</code>), lista, link de volta ao <code>index</code> e
+        imagem dinâmica controlada por JavaScript.
+      </p>
+    </aside>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <p>UniBus &copy; 2026 — Projeto acadêmico da disciplina PRG04 - PW.</p>
+    </div>
+  </footer>
+
+  <!-- Script responsável pela imagem dinâmica -->
+  <script src="../assets/js/imagem-dinamica.js"></script>
+</body>
+</html>
