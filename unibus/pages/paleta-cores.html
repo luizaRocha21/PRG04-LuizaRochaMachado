@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniBus — Paleta de Cores</title>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+  <!-- CSS externo geral do projeto -->
+  <link rel="stylesheet" href="../assets/css/global.css" />
+  <!-- CSS externo específico desta página (Desafio Aula 06) -->
+  <link rel="stylesheet" href="../assets/css/paleta.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="cabecalho">
+    <div class="container">
+      <a href="../index.html" class="marca">
+        <img src="../favicon.svg" alt="Logo UniBus" />
+        UniBus
+      </a>
+
+      <button
+        id="botao-menu"
+        class="botao-menu"
+        type="button"
+        aria-label="Abrir menu de navegação"
+        aria-expanded="false"
+        aria-controls="menu"
+      >
+        ☰
+      </button>
+
+      <nav id="menu" aria-label="Navegação principal">
+        <ul class="menu">
+          <li><a href="../index.html">Início</a></li>
+          <li><a href="atividade-3.html">Como funciona</a></li>
+          <li><a href="paleta-cores.html" aria-current="page">Paleta de cores</a></li>
+          <li><a href="sandbox.html">SandBox</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container secao">
+
+    <div class="paleta-intro">
+      <h1>Paleta de cores e fontes do UniBus</h1>
+      <p>
+        Esta página documenta a paleta de cores adotada em todo o projeto e
+        a psicologia por trás da cor principal escolhida.
+      </p>
+    </div>
+
+
+    <article class="cartao" style="margin-top: 24px;">
+      <h2>Tipo de paleta adotada</h2>
+      <p>
+        O projeto usa uma <strong>paleta de destaque (accent-based)</strong>:
+        uma base neutra em tons de creme e preto, sobre a qual o amarelo
+        aparece como cor de destaque em botões, links ativos e elementos de
+        marca. Sobre essa base, existe ainda uma
+        <strong>paleta funcional inspirada no semáforo</strong>
+        (verde / âmbar / vermelho), usada para comunicar estados do sistema
+        — por exemplo, "ônibus a caminho" (verde), "atenção/atraso" (âmbar)
+        e "cancelado/alerta" (vermelho).
+      </p>
+    </article>
+
+    <section class="secao" aria-labelledby="titulo-amostras">
+      <h2 id="titulo-amostras">Amostras da paleta completa</h2>
+      <div class="grade-paleta">
+        <div class="amostra-cor">
+          <div class="bloco bg-amarelo"></div>
+          <div class="rotulo"><strong>Amarelo</strong><code>#FFC633</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-amarelo-escuro"></div>
+          <div class="rotulo"><strong>Amarelo escuro</strong><code>#F2A200</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-preto"></div>
+          <div class="rotulo"><strong>Preto</strong><code>#1C1A16</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-preto-suave"></div>
+          <div class="rotulo"><strong>Preto suave</strong><code>#34302A</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-creme"></div>
+          <div class="rotulo"><strong>Creme</strong><code>#FFF9E5</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-creme-2"></div>
+          <div class="rotulo"><strong>Creme 2</strong><code>#FFEFC6</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-verde"></div>
+          <div class="rotulo"><strong>Verde (sucesso)</strong><code>#16A34A</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-ambar"></div>
+          <div class="rotulo"><strong>Âmbar (atenção)</strong><code>#FF7A1A</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-vermelho"></div>
+          <div class="rotulo"><strong>Vermelho (alerta)</strong><code>#E63946</code></div>
+        </div>
+        <div class="amostra-cor">
+          <div class="bloco bg-cinza"></div>
+          <div class="rotulo"><strong>Cinza (texto secundário)</strong><code>#746C60</code></div>
+        </div>
+      </div>
+      <p>
+        Cada amostra acima usa uma classe utilitária de CSS
+        (<code>.bg-amarelo</code>, <code>.bg-verde</code> etc.) definida em
+        <code>assets/css/global.css</code>, que aplica a respectiva variável
+        de cor declarada em <code>:root</code>.
+      </p>
+    </section>
+
+    <section class="secao" aria-labelledby="titulo-fontes">
+      <h2 id="titulo-fontes">Fontes do projeto</h2>
+      <table class="tabela-paleta">
+        <thead>
+          <tr>
+            <th>Uso</th>
+            <th>Fonte</th>
+            <th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Títulos (<code>--fonte-titulo</code>)</td>
+            <td style="font-family: 'Archivo', sans-serif;">Archivo</td>
+            <td>Peso forte e geométrico, transmite solidez e clareza para títulos e marca.</td>
+          </tr>
+          <tr>
+            <td>Corpo de texto (<code>--fonte-corpo</code>)</td>
+            <td style="font-family: 'Inter', sans-serif;">Inter</td>
+            <td>Alta legibilidade em telas pequenas, ideal para parágrafos e textos longos.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <p>UniBus &copy; 2026 — Projeto acadêmico da disciplina PRG04 - PW.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/menu.js"></script>
+</body>
+</html>

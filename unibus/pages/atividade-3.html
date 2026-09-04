@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-
+    /* pequenos ajustes específicos desta página */
     .imagem-dinamica-wrap {
       text-align: center;
     }
@@ -54,10 +54,23 @@
         <img src="../favicon.svg" alt="Logo UniBus" />
         UniBus
       </a>
-      <nav>
+
+      <button
+        id="botao-menu"
+        class="botao-menu"
+        type="button"
+        aria-label="Abrir menu de navegação"
+        aria-expanded="false"
+        aria-controls="menu"
+      >
+        ☰
+      </button>
+
+      <nav id="menu" aria-label="Navegação principal">
         <ul class="menu">
           <li><a href="../index.html">Início</a></li>
-          <li><a href="atividade-3.html">Como funciona</a></li>
+          <li><a href="atividade-3.html" aria-current="page">Como funciona</a></li>
+          <li><a href="paleta-cores.html">Paleta de cores</a></li>
           <li><a href="sandbox.html">SandBox</a></li>
         </ul>
       </nav>
@@ -86,7 +99,7 @@
         </ul>
       </section>
 
-      <!-- Imagem dinâmica -->
+      <!-- Imagem dinâmica: trocada via JavaScript -->
       <section class="imagem-dinamica-wrap secao">
         <h2>Frota em diferentes horários</h2>
         <img
@@ -101,17 +114,6 @@
       </section>
     </article>
 
-    <aside class="cartao">
-      <h2>Nota da atividade</h2>
-      <p>
-        Página criada para o uso de tags semânticas
-        (<code>header</code>, <code>nav</code>, <code>main</code>,
-        <code>article</code>, <code>section</code>, <code>aside</code>,
-        <code>footer</code>), lista, link de volta ao <code>index</code> e
-        imagem dinâmica controlada por JavaScript.
-      </p>
-    </aside>
-
   </main>
 
   <footer class="rodape">
@@ -122,5 +124,6 @@
 
   <!-- Script responsável pela imagem dinâmica -->
   <script src="../assets/js/imagem-dinamica.js"></script>
+  <script src="../assets/js/menu.js"></script>
 </body>
 </html>

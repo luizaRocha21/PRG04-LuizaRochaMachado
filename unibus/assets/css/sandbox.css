@@ -1,6 +1,7 @@
 /* =========================================================
    UniBus Web — assets/css/sandbox.css
    CSS externo específico da página de testes (SandBox).
+   Depende dos tokens definidos em global.css.
 ========================================================= */
 
 .sandbox-intro {
@@ -25,6 +26,24 @@
   width: 100%;
   border-radius: var(--raio);
   margin-top: 12px;
+}
+
+.video-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* proporção 16:9 */
+  border-radius: var(--raio);
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.video-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 .selo-sandbox {

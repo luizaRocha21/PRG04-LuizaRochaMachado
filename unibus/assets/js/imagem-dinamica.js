@@ -1,6 +1,6 @@
 // assets/js/imagem-dinamica.js
 // Responsável por trocar a imagem e a legenda da seção "Frota em diferentes
-// horários" da página atividade-3.html.
+// horários" da página atividade-3.html
 
 const rotas = [
   {

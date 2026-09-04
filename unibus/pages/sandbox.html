@@ -9,7 +9,7 @@
 
   <!-- CSS externo geral do projeto -->
   <link rel="stylesheet" href="../assets/css/global.css" />
-  <!-- CSS externo específico desta página -->
+  <!-- CSS externo específico desta página (Desafio Aula 05) -->
   <link rel="stylesheet" href="../assets/css/sandbox.css" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,11 +23,24 @@
         <img src="../favicon.svg" alt="Logo UniBus" />
         UniBus
       </a>
-      <nav>
+
+      <button
+        id="botao-menu"
+        class="botao-menu"
+        type="button"
+        aria-label="Abrir menu de navegação"
+        aria-expanded="false"
+        aria-controls="menu"
+      >
+        ☰
+      </button>
+
+      <nav id="menu" aria-label="Navegação principal">
         <ul class="menu">
           <li><a href="../index.html">Início</a></li>
           <li><a href="atividade-3.html">Como funciona</a></li>
-          <li><a href="sandbox.html">SandBox</a></li>
+          <li><a href="paleta-cores.html">Paleta de cores</a></li>
+          <li><a href="sandbox.html" aria-current="page">SandBox</a></li>
         </ul>
       </nav>
     </div>
@@ -38,14 +51,15 @@
       <span class="selo-sandbox">SandBox</span>
       <h1>Página de testes do projeto</h1>
       <p>
-        Espaço reservado para testar conceitos do projeto. Acessível a partir do
+        Espaço reservado para testar conceitos aprendidos em aula, sem
+        afetar as páginas "oficiais" do projeto. Acessível a partir do
         <a href="../index.html">menu principal</a>.
       </p>
     </div>
 
     <section class="midia-bloco">
       <h2>🎵 Áudio</h2>
-      <p>Elemento &lt;audio&gt; com controles, arquivo externo:</p>
+      <p>Elemento &lt;audio&gt; com controles, arquivo externo (exemplo didático):</p>
       <audio controls>
         <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg" />
         <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
@@ -55,21 +69,17 @@
 
     <section class="midia-bloco">
       <h2>🎬 Vídeo</h2>
-      <p>Elemento &lt;video&gt; com controles, arquivo externo:</p>
-      <video controls poster="../assets/images/rota-tarde.svg">
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-        Seu navegador não suporta o elemento de vídeo.
-      </video>
+      <p>Vídeo externo embutido via iframe do YouTube:</p>
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/Zh-ZUrc-aLI"
+          title="Vídeo incorporado do YouTube"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
     </section>
 
-    <section class="midia-bloco">
-      <h2>🎨 CSS Externo</h2>
-      <p>
-        Esta página consome dois arquivos CSS externos: o
-        <code>global.css</code> (compartilhado por todo o projeto) e o
-        <code>sandbox.css</code> (estilos exclusivos desta página).
-      </p>
-    </section>
   </main>
 
   <footer class="rodape">
@@ -77,6 +87,6 @@
       <p>UniBus &copy; 2026 — Projeto acadêmico da disciplina PRG04 - PW.</p>
     </div>
   </footer>
-
+  <script src="../assets/js/menu.js"></script>
 </body>
 </html>

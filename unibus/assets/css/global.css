@@ -1,6 +1,6 @@
 /* =========================================================
    UniBus Web — assets/css/global.css
-   CSS externo do projeto
+   CSS externo do projeto.
    Conceito visual: sinalização de transporte universitário —
    amarelo-ônibus, preto/branco nos detalhes, semáforo como
    sistema de acento (vermelho / âmbar / verde).
@@ -59,6 +59,10 @@ a {
   color: var(--preto);
 }
 
+img {
+  max-width: 100%;
+}
+
 .container {
   max-width: 960px;
   margin: 0 auto;
@@ -70,12 +74,15 @@ a {
   background: var(--preto);
   color: var(--creme);
   padding: 18px 0;
+  position: relative;
 }
 
 .cabecalho .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .marca {
@@ -94,7 +101,20 @@ a {
   height: 28px;
 }
 
-.menu {
+/* Botão hamburguer (visível apenas em telas estreitas) */
+.botao-menu {
+  display: none;
+  background: none;
+  border: 2px solid var(--amarelo);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: var(--amarelo);
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+#menu .menu {
   list-style: none;
   display: flex;
   gap: 22px;
@@ -102,14 +122,24 @@ a {
   padding: 0;
 }
 
-.menu a {
+#menu .menu a {
   color: var(--creme);
   text-decoration: none;
   font-size: 0.95rem;
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.menu a:hover {
+#menu .menu a:hover,
+#menu .menu a:focus-visible {
   color: var(--amarelo);
+  border-color: var(--amarelo);
+}
+
+#menu .menu a[aria-current="page"] {
+  color: var(--amarelo);
+  border-color: var(--amarelo);
 }
 
 /* Hero */
@@ -189,6 +219,28 @@ a {
   box-shadow: var(--sombra);
 }
 
+/* Grade que acomoda o <article> principal e o <aside> complementar
+   lado a lado no desktop */
+.grade-conteudo {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.aside-nota h2 {
+  font-size: 1.1rem;
+}
+
+.aside-nota ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.aside-nota li {
+  margin-bottom: 6px;
+}
+
 /* Rodapé */
 .rodape {
   background: var(--preto);
@@ -201,4 +253,88 @@ a {
 
 .rodape a {
   color: var(--amarelo);
+}
+
+/* =========================================================
+   Utilitários de paleta de cores
+   Classes que aplicam, via CSS, cada cor definida em :root —
+   usadas na página pages/paleta-cores.html.
+========================================================= */
+.bg-amarelo        { background: var(--amarelo); }
+.bg-amarelo-escuro  { background: var(--amarelo-escuro); }
+.bg-preto           { background: var(--preto); }
+.bg-preto-suave     { background: var(--preto-suave); }
+.bg-creme           { background: var(--creme); }
+.bg-creme-2         { background: var(--creme-2); }
+.bg-verde           { background: var(--verde); }
+.bg-ambar           { background: var(--ambar); }
+.bg-vermelho        { background: var(--vermelho); }
+.bg-cinza           { background: var(--cinza); }
+
+.texto-claro { color: var(--creme); }
+.texto-escuro { color: var(--preto); }
+
+/* =========================================================
+   Responsividade
+========================================================= */
+
+/* Tablets e telas médias */
+@media (max-width: 860px) {
+  .grade-conteudo {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Celulares: menu vira um painel retrátil (hamburguer) */
+@media (max-width: 700px) {
+  .botao-menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #menu .menu {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--preto);
+    padding: 14px 24px 20px;
+    border-top: 1px solid var(--preto-suave);
+  }
+
+  #menu .menu.aberto {
+    display: flex;
+  }
+
+  #menu .menu a {
+    padding: 10px 4px;
+  }
+
+  .hero {
+    padding: 46px 0 34px;
+  }
+
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .botao,
+  .botao-secundario {
+    display: block;
+    width: 100%;
+    margin: 8px 0 0;
+    text-align: center;
+  }
+
+  .cartao {
+    padding: 20px;
+  }
 }
