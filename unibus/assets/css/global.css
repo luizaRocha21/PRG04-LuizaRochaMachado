@@ -1,38 +1,31 @@
 /* =========================================================
    UniBus Web — assets/css/global.css
-   CSS externo do projeto.
-   Conceito visual: sinalização de transporte universitário —
-   amarelo-ônibus, preto/branco nos detalhes, semáforo como
-   sistema de acento (vermelho / âmbar / verde).
+   CSS externo do projeto, mobile-first.
+   Base = estilos para smartphones; @media (min-width) adiciona
+   ajustes para tablets (601px+) e desktops (1025px+).
 ========================================================= */
 
 :root {
-  /* Neutros */
   --preto: #1c1a16;
   --preto-suave: #34302a;
   --branco: #ffffff;
 
-  /* Fundo */
   --creme: #fff9e5;
   --creme-2: #ffefc6;
   --linha: #f0e3b8;
   --cinza: #746c60;
 
-  /* Marca */
   --amarelo: #ffc633;
   --amarelo-escuro: #f2a200;
 
-  /* Semáforo */
   --verde: #16a34a;
   --ambar: #ff7a1a;
   --vermelho: #e63946;
 
-  /* Forma */
   --raio: 14px;
   --raio-grande: 28px;
   --sombra: 0 12px 30px rgba(28, 26, 22, 0.1);
 
-  /* Tipografia */
   --fonte-titulo: "Archivo", "Inter", sans-serif;
   --fonte-corpo: "Inter", sans-serif;
 }
@@ -66,14 +59,14 @@ img {
 .container {
   max-width: 960px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
 }
 
-/* Cabeçalho */
+/* Cabeçalho: logo + botão hamburguer + nav (flexbox) */
 .cabecalho {
   background: var(--preto);
   color: var(--creme);
-  padding: 18px 0;
+  padding: 16px 0;
   position: relative;
 }
 
@@ -91,19 +84,20 @@ img {
   gap: 10px;
   font-family: var(--fonte-titulo);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: var(--amarelo);
   text-decoration: none;
 }
 
 .marca img {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
 }
 
-/* Botão hamburguer (visível apenas em telas estreitas) */
 .botao-menu {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: 2px solid var(--amarelo);
   border-radius: 8px;
@@ -114,19 +108,35 @@ img {
   line-height: 1;
 }
 
+/* nav ocupa a largura toda e vira um painel abaixo do cabeçalho no mobile */
+#menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-basis: 100%;
+  order: 3;
+}
+
 #menu .menu {
   list-style: none;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 14px 0 4px;
+  border-top: 1px solid var(--preto-suave);
+}
+
+#menu .menu.aberto {
   display: flex;
-  gap: 22px;
-  margin: 0;
-  padding: 0;
 }
 
 #menu .menu a {
   color: var(--creme);
   text-decoration: none;
   font-size: 0.95rem;
-  padding: 6px 2px;
+  padding: 8px 2px;
   border-bottom: 2px solid transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
@@ -142,9 +152,20 @@ img {
   border-color: var(--amarelo);
 }
 
+.botao-login {
+  display: none;
+  background: var(--amarelo);
+  color: var(--preto);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 8px 18px;
+  border-radius: 999px;
+}
+
 /* Hero */
 .hero {
-  padding: 70px 0 50px;
+  padding: 40px 0 30px;
   text-align: center;
 }
 
@@ -156,9 +177,9 @@ img {
   border: 1px solid var(--linha);
   border-radius: 999px;
   padding: 6px 16px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--preto-suave);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .ponto-verde {
@@ -170,7 +191,7 @@ img {
 }
 
 .hero h1 {
-  font-size: 2.4rem;
+  font-size: 1.7rem;
 }
 
 .hero .destaque {
@@ -179,57 +200,67 @@ img {
 
 .hero p {
   max-width: 560px;
-  margin: 0 auto 24px;
+  margin: 0 auto 20px;
   color: var(--preto-suave);
 }
 
+.botao,
+.botao-secundario {
+  display: block;
+  width: 100%;
+  margin: 8px 0 0;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 700;
+}
+
 .botao {
-  display: inline-block;
   background: var(--amarelo);
   color: var(--preto);
   border: none;
-  border-radius: 999px;
-  padding: 12px 26px;
-  font-weight: 700;
-  text-decoration: none;
   box-shadow: var(--sombra);
 }
 
 .botao-secundario {
-  display: inline-block;
   background: transparent;
   color: var(--preto);
   border: 2px solid var(--preto);
-  border-radius: 999px;
-  padding: 10px 24px;
-  text-decoration: none;
   font-weight: 600;
 }
 
 /* Cartões / seções gerais */
 .secao {
-  padding: 40px 0;
+  padding: 30px 0;
 }
 
 .cartao {
   background: var(--branco);
   border: 1px solid var(--linha);
   border-radius: var(--raio-grande);
-  padding: 28px;
+  padding: 20px;
   box-shadow: var(--sombra);
 }
 
-/* Grade que acomoda o <article> principal e o <aside> complementar
-   lado a lado no desktop */
+.cartao-bootstrap {
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+}
+
+/* article + aside em flexbox: empilhados no mobile, lado a lado no desktop */
 .grade-conteudo {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grade-conteudo > * {
+  flex: 1;
 }
 
 .aside-nota h2 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 .aside-nota ul {
@@ -247,7 +278,7 @@ img {
   color: var(--cinza);
   text-align: center;
   padding: 24px 0;
-  margin-top: 40px;
+  margin-top: 30px;
   font-size: 0.85rem;
 }
 
@@ -256,11 +287,9 @@ img {
 }
 
 /* =========================================================
-   Utilitários de paleta de cores
-   Classes que aplicam, via CSS, cada cor definida em :root —
-   usadas na página pages/paleta-cores.html.
+   Utilitários de paleta de cores — usados em pages/paleta-cores.html
 ========================================================= */
-.bg-amarelo        { background: var(--amarelo); }
+.bg-amarelo         { background: var(--amarelo); }
 .bg-amarelo-escuro  { background: var(--amarelo-escuro); }
 .bg-preto           { background: var(--preto); }
 .bg-preto-suave     { background: var(--preto-suave); }
@@ -271,70 +300,82 @@ img {
 .bg-vermelho        { background: var(--vermelho); }
 .bg-cinza           { background: var(--cinza); }
 
-.texto-claro { color: var(--creme); }
+.texto-claro  { color: var(--creme); }
 .texto-escuro { color: var(--preto); }
 
 /* =========================================================
-   Responsividade
+   Media Queries — mobile first
+   601px: tablets · 1025px: desktops
 ========================================================= */
 
-/* Tablets e telas médias */
-@media (max-width: 860px) {
-  .grade-conteudo {
-    grid-template-columns: 1fr;
-  }
-
+@media (min-width: 601px) {
   .hero h1 {
-    font-size: 2rem;
-  }
-}
-
-/* Celulares: menu vira um painel retrátil (hamburguer) */
-@media (max-width: 700px) {
-  .botao-menu {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #menu .menu {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--preto);
-    padding: 14px 24px 20px;
-    border-top: 1px solid var(--preto-suave);
-  }
-
-  #menu .menu.aberto {
-    display: flex;
-  }
-
-  #menu .menu a {
-    padding: 10px 4px;
-  }
-
-  .hero {
-    padding: 46px 0 34px;
-  }
-
-  .hero h1 {
-    font-size: 1.6rem;
+    font-size: 2.1rem;
   }
 
   .botao,
   .botao-secundario {
-    display: block;
-    width: 100%;
-    margin: 8px 0 0;
-    text-align: center;
+    display: inline-block;
+    width: auto;
+    margin: 8px 6px 0;
+  }
+}
+
+@media (min-width: 1025px) {
+  .container {
+    padding: 0 24px;
+  }
+
+  .botao-menu {
+    display: none;
+  }
+
+  #menu {
+    flex-basis: auto;
+    order: 0;
+    width: auto;
+  }
+
+  #menu .menu {
+    display: flex !important;
+    flex-direction: row;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    gap: 22px;
+  }
+
+  .botao-login {
+    display: inline-block;
+  }
+
+  .item-login-mobile {
+    display: none;
+  }
+
+  .hero {
+    padding: 70px 0 50px;
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .grade-conteudo {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .grade-conteudo > article {
+    flex: 2;
+  }
+
+  .grade-conteudo > aside {
+    flex: 1;
   }
 
   .cartao {
-    padding: 20px;
+    padding: 28px;
   }
 }
