@@ -1,0 +1,34 @@
+/* Estilos exclusivos da página "Como funciona" */
+
+.imagem-dinamica-wrap {
+  text-align: center;
+}
+
+.imagem-dinamica-wrap img {
+  max-width: 100%;
+  border-radius: var(--raio-grande);
+  box-shadow: var(--sombra);
+}
+
+.imagem-dinamica-wrap button {
+  margin-top: 16px;
+}
+
+.lista-passos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.lista-passos li {
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 14px 18px;
+}
+
+.lista-passos strong {
+  color: var(--amarelo-escuro);
+}

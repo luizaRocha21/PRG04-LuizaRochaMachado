@@ -1,0 +1,63 @@
+/* =========================================================
+   Estilos exclusivos da página Paleta de cores.
+   Usa os tokens e utilitários de cor de global.css.
+========================================================= */
+
+.paleta-intro {
+  max-width: 680px;
+}
+
+.grade-paleta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px;
+  margin: 24px 0 40px;
+}
+
+.amostra-cor {
+  border-radius: var(--raio);
+  overflow: hidden;
+  border: 1px solid var(--linha);
+  box-shadow: var(--sombra);
+}
+
+.amostra-cor .bloco {
+  height: 90px;
+}
+
+.amostra-cor .rotulo {
+  background: var(--branco);
+  padding: 10px 12px;
+}
+
+.amostra-cor .rotulo strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.amostra-cor .rotulo code {
+  font-size: 0.8rem;
+  color: var(--cinza);
+}
+
+.tabela-paleta {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.tabela-paleta th,
+.tabela-paleta td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--linha);
+}
+
+.tabela-paleta th {
+  color: var(--preto-suave);
+  font-family: var(--fonte-titulo);
+}
+
+.paleta-tipo {
+  margin-top: 24px;
+}
