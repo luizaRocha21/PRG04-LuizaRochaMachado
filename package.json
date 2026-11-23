@@ -1,0 +1,12 @@
+{
+  "name": "unibus-root",
+  "private": true,
+  "workspaces": [
+    "unibus"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=unibus",
+    "build": "npm run build --workspace=unibus",
+    "preview": "npm run preview --workspace=unibus"
+  }
+}
