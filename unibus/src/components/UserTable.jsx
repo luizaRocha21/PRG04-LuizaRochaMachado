@@ -1,6 +1,6 @@
 import StatusBadge from "./StatusBadge";
 
-export default function UserTable({ usuarios }) {
+export default function UserTable({ usuarios, onDelete }) {
   return (
     <div className="cartao table-responsive">
       <table className="table table-striped table-hover align-middle mb-0">
@@ -9,6 +9,7 @@ export default function UserTable({ usuarios }) {
             <th>ID</th>
             <th>Nome</th>
             <th>E-mail</th>
+            <th>Perfil</th>
             <th>Status</th>
             <th>Ações</th>
           </tr>
@@ -19,18 +20,18 @@ export default function UserTable({ usuarios }) {
               <td>{usuario.id}</td>
               <td>{usuario.nome}</td>
               <td>{usuario.email}</td>
+              <td>{usuario.perfil}</td>
               <td>
                 <StatusBadge status={usuario.status} />
               </td>
               <td>
-                <div className="d-flex gap-2">
-                  <button type="button" className="btn btn-sm btn-outline-primary">
-                    Editar
-                  </button>
-                  <button type="button" className="btn btn-sm btn-outline-danger">
-                    Excluir
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => onDelete(usuario.id)}
+                >
+                  Excluir
+                </button>
               </td>
             </tr>
           ))}
@@ -39,3 +40,4 @@ export default function UserTable({ usuarios }) {
     </div>
   );
 }
+
