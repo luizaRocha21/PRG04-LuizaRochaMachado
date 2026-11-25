@@ -77,3 +77,34 @@ unibus/
     └── assets/
         └── images/         → ilustrações das rotas (manhã, tarde e noite)
 ```
+
+## Backend (API REST)
+
+O painel administrativo consome uma API REST de usuários feita com **Spring Boot**, **Spring Data JPA** e
+**PostgreSQL (Supabase)**, hospedada no **Render**. O código fica na pasta `backend/`:
+
+```
+backend/
+├── pom.xml              → dependências (Spring Web, Spring Data JPA, validação, PostgreSQL, H2)
+├── Dockerfile           → imagem usada no deploy do Render
+├── src/main/java/com/unibus/backend/
+│   ├── controller/      → endpoints REST
+│   ├── service/         → regras de negócio
+│   ├── repository/      → acesso ao banco (Spring Data JPA)
+│   ├── model/           → entidade e enums
+│   ├── dto/             → objetos de entrada e saída
+│   ├── exception/       → exceções e tratamento de erros HTTP
+│   └── config/          → CORS
+└── src/test/java/...    → testes (controller, serviço, repositório e integração)
+```
+
+Para rodar localmente (JDK 21, sem precisar de banco instalado):
+
+```bash
+cd backend
+./mvnw spring-boot:run   # API em http://localhost:8080
+./mvnw test              # executa os testes
+```
+
+Endpoints, testes e o passo a passo de deploy (Supabase + Render) estão em [`backend/README.md`](backend/README.md).
+O frontend lê a URL da API na variável `VITE_API_URL` (veja `unibus/.env.example`).

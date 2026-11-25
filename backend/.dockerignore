@@ -1,0 +1,11 @@
+# Arquivos que não precisam entrar no build da imagem Docker
+target/
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+.env
+.env.*
+HELP.md
+README.md
