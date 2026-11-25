@@ -81,8 +81,9 @@ class UsuarioApiIntegrationTest {
 
         mockMvc.perform(get(URL))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(id));
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id").value(id))
+                .andExpect(jsonPath("$.totalElements").value(1));
 
         mockMvc.perform(put(URL + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +117,7 @@ class UsuarioApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET lista os usuários em ordem crescente de id")
+    @DisplayName("GET lista os usuários paginados em ordem crescente de id")
     void get_deveListarEmOrdemDeId() throws Exception {
         long primeiro = criarPelaApi("Ana", "ana@unibus.com", "estudante", "ativo");
         long segundo = criarPelaApi("Bruno", "bruno@unibus.com", "motorista", "ativo");
@@ -124,10 +125,30 @@ class UsuarioApiIntegrationTest {
 
         mockMvc.perform(get(URL))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id").value(primeiro))
-                .andExpect(jsonPath("$[1].id").value(segundo))
-                .andExpect(jsonPath("$[2].id").value(terceiro));
+                .andExpect(jsonPath("$.content", hasSize(3)))
+                .andExpect(jsonPath("$.content[0].id").value(primeiro))
+                .andExpect(jsonPath("$.content[1].id").value(segundo))
+                .andExpect(jsonPath("$.content[2].id").value(terceiro))
+                .andExpect(jsonPath("$.totalElements").value(3))
+                .andExpect(jsonPath("$.totalPages").value(1));
+    }
+
+    @Test
+    @DisplayName("GET com parâmetros page e size retorna a página solicitada")
+    void get_comParametrosDePaginacao_deveRetornarPaginaSolicitada() throws Exception {
+        long primeiro = criarPelaApi("Ana", "ana@unibus.com", "estudante", "ativo");
+        long segundo = criarPelaApi("Bruno", "bruno@unibus.com", "motorista", "ativo");
+        criarPelaApi("Carla", "carla@unibus.com", "admin", "ativo");
+
+        mockMvc.perform(get(URL).param("page", "0").param("size", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].id").value(primeiro))
+                .andExpect(jsonPath("$.content[1].id").value(segundo))
+                .andExpect(jsonPath("$.totalElements").value(3))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.size").value(2))
+                .andExpect(jsonPath("$.number").value(0));
     }
 
     @Test

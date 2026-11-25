@@ -26,7 +26,7 @@ export default function Admin() {
           throw new Error("Erro ao buscar usuários da API.");
         }
         const dados = await resposta.json();
-        setUsuarios(dados);
+        setUsuarios(Array.isArray(dados) ? dados : (dados.content ?? []));
       } catch {
         setErro("Não foi possível carregar os usuários. Verifique se a API está em execução.");
       } finally {

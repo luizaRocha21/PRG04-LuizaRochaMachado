@@ -6,12 +6,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.unibus.backend.model.Perfil;
 import com.unibus.backend.model.StatusUsuario;
 import com.unibus.backend.model.Usuario;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -42,14 +43,18 @@ class UsuarioRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAll com Sort por id devolve os usuários em ordem crescente de id")
-    void findAll_deveRetornarOrdenadoPorId() {
+    @DisplayName("findAll com Pageable retorna página ordenada por id")
+    void findAll_comPageable_deveRetornarPaginaOrdenadaPorId() {
         Usuario primeiro = salvar("Ana", "ana@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO);
         Usuario segundo = salvar("Bruno", "bruno@unibus.com", Perfil.ADMIN, StatusUsuario.ATIVO);
+        salvar("Carla", "carla@unibus.com", Perfil.MOTORISTA, StatusUsuario.ATIVO);
 
-        List<Usuario> todos = usuarioRepository.findAll(Sort.by("id"));
+        Page<Usuario> pagina = usuarioRepository.findAll(PageRequest.of(0, 2, Sort.by("id")));
 
-        assertThat(todos).extracting(Usuario::getId).containsExactly(primeiro.getId(), segundo.getId());
+        assertThat(pagina.getContent()).extracting(Usuario::getId)
+                .containsExactly(primeiro.getId(), segundo.getId());
+        assertThat(pagina.getTotalElements()).isEqualTo(3);
+        assertThat(pagina.getTotalPages()).isEqualTo(2);
     }
 
     @Test

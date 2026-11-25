@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.reactive.function.client.WebClientException;
 
 /**
  * Traduz as exceções da aplicação em respostas HTTP com o status code correto e um corpo
@@ -28,6 +29,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsuarioNaoEncontradoException.class)
     public ResponseEntity<ErroResponse> tratarUsuarioNaoEncontrado(UsuarioNaoEncontradoException ex) {
         return montarResposta(HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
+    }
+
+    /** 404: o CEP consultado não foi encontrado na API externa. */
+    @ExceptionHandler(CepNaoEncontradoException.class)
+    public ResponseEntity<ErroResponse> tratarCepNaoEncontrado(CepNaoEncontradoException ex) {
+        return montarResposta(HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
+    }
+
+    /** 400: o CEP informado possui formato inválido. */
+    @ExceptionHandler(CepInvalidoException.class)
+    public ResponseEntity<ErroResponse> tratarCepInvalido(CepInvalidoException ex) {
+        return montarResposta(HttpStatus.BAD_REQUEST, ex.getMessage(), List.of());
+    }
+
+    /** 502: falha de comunicação com a API externa ViaCEP. */
+    @ExceptionHandler(WebClientException.class)
+    public ResponseEntity<ErroResponse> tratarErroWebClient(WebClientException ex) {
+        return montarResposta(HttpStatus.BAD_GATEWAY,
+                "Erro ao consultar o serviço externo de CEP.",
+                List.of());
     }
 
     /** 409: o e-mail já pertence a outro usuário. */

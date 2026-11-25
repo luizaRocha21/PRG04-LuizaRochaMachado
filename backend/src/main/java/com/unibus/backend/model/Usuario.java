@@ -42,8 +42,8 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private StatusUsuario status;
 
-    /** Construtor sem argumentos exigido pelo JPA (não deve ser usado diretamente). */
-    protected Usuario() {
+    /** Construtor padrão exigido pelo JPA e pela desserialização do Jackson. */
+    public Usuario() {
     }
 
     public Usuario(String nome, String email, Perfil perfil, StatusUsuario status) {

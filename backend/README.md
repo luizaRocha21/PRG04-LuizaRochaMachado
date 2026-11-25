@@ -10,26 +10,35 @@ API RESTful responsável pelo gerenciamento de usuários da plataforma UniBus (e
 
 O código-fonte (`src/main/java/com/unibus/backend/`) está organizado nas seguintes camadas:
 
-- **`controller`**: exposição dos endpoints HTTP (`UsuarioController` e `StatusController`), mapeamento de rotas, verbos e códigos de status.
-- **`service`**: regras de negócio, validação de unicidade de e-mail e controle transacional (`UsuarioService`).
-- **`repository`**: interface de persistência com consultas derivadas via Spring Data JPA (`UsuarioRepository`).
+- **`controller`**: exposição dos endpoints HTTP (`UsuarioController`, `CepController` e `StatusController`), mapeamento de rotas, paginação, verbos e códigos de status.
+- **`service`**: regras de negócio, listagem paginada, validação de unicidade de e-mail e controle transacional (`UsuarioService`).
+- **`repository`**: interface de persistência com paginação nativa (`Pageable`) e consultas derivadas via Spring Data JPA (`UsuarioRepository`).
 - **`model`**: entidade de domínio mapeada para o banco relacional (`Usuario`) e enumerações (`Perfil`, `StatusUsuario`).
-- **`dto`**: contratos de entrada e saída em JSON (`UsuarioRequest`, `UsuarioResponse`, `ErroResponse`, `StatusResponse`), mantendo a entidade JPA isolada da camada web.
-- **`exception`**: exceções de domínio (`UsuarioNaoEncontradoException`, `EmailJaCadastradoException`) e tratamento centralizado com `@RestControllerAdvice` (`GlobalExceptionHandler`).
-- **`config`**: política de CORS parametrizada por variável de ambiente (`CorsConfig`).
+- **`dto`**: contratos de entrada e saída em JSON (`UsuarioRequest`, `UsuarioResponse`, `CepResponse`, `ErroResponse`, `StatusResponse`), mantendo a entidade JPA isolada da camada web.
+- **`mapper`**: conversão automatizada entre entidades JPA e DTOs utilizando `ObjectMapper` do Jackson (`ObjectMapperUtil`).
+- **`client`**: consumo reativo da API externa ViaCEP com `WebClient` (`ViaCepClient`).
+- **`exception`**: exceções de domínio (`UsuarioNaoEncontradoException`, `EmailJaCadastradoException`, `CepInvalidoException`, `CepNaoEncontradoException`) e tratamento centralizado com `@RestControllerAdvice` (`GlobalExceptionHandler`).
+- **`config`**: política de CORS (`CorsConfig`) e configuração do bean `WebClient` (`WebClientConfig`).
 
 ---
 
 ## Endpoints
 
-| Método HTTP | Rota                 | Descrição                                       | Respostas de Sucesso               | Respostas de Erro        |
-| ----------- | -------------------- | ----------------------------------------------- | ---------------------------------- | ------------------------ |
-| `GET`       | `/`                  | Verificação de disponibilidade (health check)   | `200 OK`                           | —                        |
-| `GET`       | `/api/usuarios`      | Lista todos os usuários ordenados por `id`      | `200 OK`                           | —                        |
-| `GET`       | `/api/usuarios/{id}` | Busca um usuário pelo identificador             | `200 OK`                           | `400`, `404`             |
-| `POST`      | `/api/usuarios`      | Cadastra um novo usuário                        | `201 Created` (header `Location`)  | `400`, `409`, `415`      |
-| `PUT`       | `/api/usuarios/{id}` | Atualiza integralmente um usuário existente     | `200 OK`                           | `400`, `404`, `409`      |
-| `DELETE`    | `/api/usuarios/{id}` | Remove um usuário pelo identificador            | `204 No Content`                   | `400`, `404`             |
+| Método HTTP | Rota                 | Descrição                                                                 | Respostas de Sucesso               | Respostas de Erro        |
+| ----------- | -------------------- | ------------------------------------------------------------------------- | ---------------------------------- | ------------------------ |
+| `GET`       | `/`                  | Verificação de disponibilidade (health check)                             | `200 OK`                           | —                        |
+| `GET`       | `/api/usuarios`      | Lista usuários de forma paginada (`?page=0&size=10&sort=id,asc`)          | `200 OK` (`Page<UsuarioResponse>`) | —                        |
+| `GET`       | `/api/usuarios/{id}` | Busca um usuário pelo identificador                                       | `200 OK`                           | `400`, `404`             |
+| `POST`      | `/api/usuarios`      | Cadastra um novo usuário                                                  | `201 Created` (header `Location`)  | `400`, `409`, `415`      |
+| `PUT`       | `/api/usuarios/{id}` | Atualiza integralmente um usuário existente                               | `200 OK`                           | `400`, `404`, `409`      |
+| `DELETE`    | `/api/usuarios/{id}` | Remove um usuário pelo identificador                                      | `204 No Content`                   | `400`, `404`             |
+| `GET`       | `/api/cep/{cep}`     | Consulta dados de endereço por CEP via integração `WebClient` (ViaCEP)    | `200 OK` (`CepResponse`)           | `400`, `404`, `502`      |
+
+### Parâmetros de Paginação (`GET /api/usuarios`)
+
+- `page`: índice da página baseado em zero (padrão: `0`).
+- `size`: quantidade de registros por página (padrão: `10`).
+- `sort`: campo e direção de ordenação (padrão: `id,asc`).
 
 ### Contrato JSON (`POST` e `PUT`)
 

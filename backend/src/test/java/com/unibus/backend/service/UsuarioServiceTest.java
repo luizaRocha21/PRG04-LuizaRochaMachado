@@ -11,24 +11,31 @@ import com.unibus.backend.dto.UsuarioRequest;
 import com.unibus.backend.dto.UsuarioResponse;
 import com.unibus.backend.exception.EmailJaCadastradoException;
 import com.unibus.backend.exception.UsuarioNaoEncontradoException;
+import com.unibus.backend.mapper.ObjectMapperUtil;
 import com.unibus.backend.model.Perfil;
 import com.unibus.backend.model.StatusUsuario;
 import com.unibus.backend.model.Usuario;
 import com.unibus.backend.repository.UsuarioRepository;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
+import tools.jackson.databind.ObjectMapper;
 
 /**
- * Testes unitários do {@link UsuarioService} com {@link UsuarioRepository} simulado via Mockito.
+ * Testes unitários do {@link UsuarioService} com {@link UsuarioRepository} simulado via Mockito
+ * e conversão real via {@link ObjectMapperUtil}.
  */
 @ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
@@ -36,8 +43,13 @@ class UsuarioServiceTest {
     @Mock
     private UsuarioRepository usuarioRepository;
 
-    @InjectMocks
     private UsuarioService usuarioService;
+
+    @BeforeEach
+    void setUp() {
+        ObjectMapperUtil objectMapperUtil = new ObjectMapperUtil(new ObjectMapper());
+        usuarioService = new UsuarioService(usuarioRepository, objectMapperUtil);
+    }
 
     /** Instancia uma entidade com identificador preenchido para simular registro persistido. */
     private static Usuario usuarioPersistido(Long id, String nome, String email, Perfil perfil, StatusUsuario status) {
@@ -51,25 +63,33 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("listarTodos converte as entidades em DTOs, ordenadas pelo id")
-    void listarTodos_deveRetornarDtosOrdenadosPeloId() {
-        when(usuarioRepository.findAll(Sort.by("id"))).thenReturn(List.of(
+    @DisplayName("listarTodos retorna página de DTOs convertidos via ObjectMapperUtil")
+    void listarTodos_deveRetornarPaginaDeDtos() {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by("id"));
+        List<Usuario> entidades = List.of(
                 usuarioPersistido(1L, "Ana Souza", "ana@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO),
-                usuarioPersistido(2L, "Bruno Lima", "bruno@unibus.com", Perfil.MOTORISTA, StatusUsuario.INATIVO)));
+                usuarioPersistido(2L, "Bruno Lima", "bruno@unibus.com", Perfil.MOTORISTA, StatusUsuario.INATIVO));
+        when(usuarioRepository.findAll(pageable)).thenReturn(new PageImpl<>(entidades, pageable, 3));
 
-        List<UsuarioResponse> resultado = usuarioService.listarTodos();
+        Page<UsuarioResponse> resultado = usuarioService.listarTodos(pageable);
 
-        assertThat(resultado).containsExactly(
+        assertThat(resultado.getContent()).containsExactly(
                 new UsuarioResponse(1L, "Ana Souza", "ana@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO),
                 new UsuarioResponse(2L, "Bruno Lima", "bruno@unibus.com", Perfil.MOTORISTA, StatusUsuario.INATIVO));
+        assertThat(resultado.getTotalElements()).isEqualTo(3);
+        assertThat(resultado.getTotalPages()).isEqualTo(2);
     }
 
     @Test
-    @DisplayName("listarTodos retorna lista vazia quando não há usuários")
-    void listarTodos_deveRetornarListaVaziaQuandoNaoHaUsuarios() {
-        when(usuarioRepository.findAll(Sort.by("id"))).thenReturn(List.of());
+    @DisplayName("listarTodos retorna página vazia quando não há usuários")
+    void listarTodos_deveRetornarPaginaVaziaQuandoNaoHaUsuarios() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+        when(usuarioRepository.findAll(pageable)).thenReturn(Page.empty(pageable));
 
-        assertThat(usuarioService.listarTodos()).isEmpty();
+        Page<UsuarioResponse> resultado = usuarioService.listarTodos(pageable);
+
+        assertThat(resultado.getContent()).isEmpty();
+        assertThat(resultado.getTotalElements()).isZero();
     }
 
     @Test

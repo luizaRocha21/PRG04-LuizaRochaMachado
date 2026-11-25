@@ -5,7 +5,10 @@ import com.unibus.backend.dto.UsuarioResponse;
 import com.unibus.backend.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,10 +48,11 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    /** GET /api/usuarios: lista todos os usuários (200 OK). */
+    /** GET /api/usuarios: lista os usuários de forma paginada (200 OK). */
     @GetMapping
-    public List<UsuarioResponse> listar() {
-        return usuarioService.listarTodos();
+    public Page<UsuarioResponse> listar(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return usuarioService.listarTodos(pageable);
     }
 
     /** GET /api/usuarios/{id}: busca um usuário por identificador (200 OK ou 404 Not Found). */

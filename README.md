@@ -32,10 +32,12 @@ O sistema é dividido em uma aplicação SPA (Single Page Application) no fronte
 │   └── src/
 │       ├── main/
 │       │   ├── java/com/unibus/backend/
-│       │   │   ├── config/     # Configuração de CORS
-│       │   │   ├── controller/ # Endpoints REST
+│       │   │   ├── client/     # Consumo de API externa com WebClient (ViaCepClient)
+│       │   │   ├── config/     # Configurações de CORS e WebClient
+│       │   │   ├── controller/ # Endpoints REST (usuários, CEP e status)
 │       │   │   ├── dto/        # Objetos de transferência de dados
 │       │   │   ├── exception/  # Exceções de domínio e tratamento global HTTP
+│       │   │   ├── mapper/     # Conversão entre entidades e DTOs (ObjectMapperUtil)
 │       │   │   ├── model/      # Entidades JPA e enumerações
 │       │   │   ├── repository/ # Repositórios Spring Data JPA
 │       │   │   └── service/    # Regras de negócio e controle transacional

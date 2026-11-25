@@ -4,35 +4,35 @@ import com.unibus.backend.dto.UsuarioRequest;
 import com.unibus.backend.dto.UsuarioResponse;
 import com.unibus.backend.exception.EmailJaCadastradoException;
 import com.unibus.backend.exception.UsuarioNaoEncontradoException;
+import com.unibus.backend.mapper.ObjectMapperUtil;
 import com.unibus.backend.model.Usuario;
 import com.unibus.backend.repository.UsuarioRepository;
-import java.util.List;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Camada de negócio dos usuários: aplica as regras (id existente, e-mail único) e
- * orquestra o acesso ao {@link UsuarioRepository}.
- *
- * <p>Recebe e devolve DTOs, de modo que a entidade JPA não vaza para a camada web.
- * Cada método público roda em uma transação (somente leitura nas consultas).</p>
+ * Camada de negócio dos usuários: aplica as regras (id existente, e-mail único),
+ * converte entidades e DTOs via {@link ObjectMapperUtil} e orquestra o acesso ao
+ * {@link UsuarioRepository}.
  */
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final ObjectMapperUtil objectMapperUtil;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ObjectMapperUtil objectMapperUtil) {
         this.usuarioRepository = usuarioRepository;
+        this.objectMapperUtil = objectMapperUtil;
     }
 
-    /** Lista todos os usuários ordenados de forma crescente pelo identificador. */
+    /** Lista os usuários de forma paginada. */
     @Transactional(readOnly = true)
-    public List<UsuarioResponse> listarTodos() {
-        return usuarioRepository.findAll(Sort.by("id")).stream()
-                .map(UsuarioResponse::de)
-                .toList();
+    public Page<UsuarioResponse> listarTodos(Pageable pageable) {
+        return usuarioRepository.findAll(pageable)
+                .map(usuario -> objectMapperUtil.map(usuario, UsuarioResponse.class));
     }
 
     /**
@@ -42,7 +42,7 @@ public class UsuarioService {
      */
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPorId(Long id) {
-        return UsuarioResponse.de(buscarEntidade(id));
+        return objectMapperUtil.map(buscarEntidade(id), UsuarioResponse.class);
     }
 
     /**
@@ -56,8 +56,9 @@ public class UsuarioService {
             throw new EmailJaCadastradoException(request.email());
         }
 
-        Usuario usuario = new Usuario(request.nome(), request.email(), request.perfil(), request.status());
-        return UsuarioResponse.de(usuarioRepository.save(usuario));
+        Usuario usuario = objectMapperUtil.map(request, Usuario.class);
+        Usuario salvo = usuarioRepository.save(usuario);
+        return objectMapperUtil.map(salvo, UsuarioResponse.class);
     }
 
     /**
@@ -75,11 +76,9 @@ public class UsuarioService {
             throw new EmailJaCadastradoException(request.email());
         }
 
-        usuario.setNome(request.nome());
-        usuario.setEmail(request.email());
-        usuario.setPerfil(request.perfil());
-        usuario.setStatus(request.status());
-        return UsuarioResponse.de(usuarioRepository.save(usuario));
+        objectMapperUtil.atualizar(request, usuario);
+        Usuario salvo = usuarioRepository.save(usuario);
+        return objectMapperUtil.map(salvo, UsuarioResponse.class);
     }
 
     /**

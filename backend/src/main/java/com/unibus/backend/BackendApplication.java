@@ -13,8 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *   <li>{@code repository}: acesso ao banco (Spring Data JPA);</li>
  *   <li>{@code model}: entidades JPA e enums;</li>
  *   <li>{@code dto}: objetos de entrada/saída da API;</li>
+ *   <li>{@code mapper}: conversão entre entidades e DTOs (ObjectMapper);</li>
+ *   <li>{@code client}: clientes HTTP reativos para integração externa (WebClient);</li>
  *   <li>{@code exception}: exceções de negócio e tradução para respostas HTTP;</li>
- *   <li>{@code config}: configurações (CORS).</li>
+ *   <li>{@code config}: configurações (CORS e WebClient).</li>
  * </ul>
  */
 @SpringBootApplication

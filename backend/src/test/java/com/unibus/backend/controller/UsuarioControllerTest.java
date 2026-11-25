@@ -35,6 +35,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -68,39 +73,70 @@ class UsuarioControllerTest {
     private static UsuarioResponse ana() {
         return new UsuarioResponse(1L, "Ana Souza", "ana.souza@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO);
     }
+
     @Nested
-    @DisplayName("GET /api/usuarios (listar)")
+    @DisplayName("GET /api/usuarios (listar paginado)")
     class Listar {
 
         @Test
-        @DisplayName("retorna 200 com a lista de usuários em JSON")
-        void deveRetornar200ComAListaDeUsuarios() throws Exception {
-            given(usuarioService.listarTodos()).willReturn(List.of(
+        @DisplayName("retorna 200 com a página de usuários e metadados de paginação")
+        void deveRetornar200ComAPaginaDeUsuarios() throws Exception {
+            Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+            List<UsuarioResponse> itens = List.of(
                     ana(),
-                    new UsuarioResponse(2L, "Bruno Lima", "bruno@unibus.com", Perfil.MOTORISTA, StatusUsuario.INATIVO)));
+                    new UsuarioResponse(2L, "Bruno Lima", "bruno@unibus.com", Perfil.MOTORISTA, StatusUsuario.INATIVO));
+            given(usuarioService.listarTodos(any(Pageable.class)))
+                    .willReturn(new PageImpl<>(itens, pageable, 2));
 
             mockMvc.perform(get(URL))
                     .andExpect(status().isOk())
                     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(2)))
-                    .andExpect(jsonPath("$[0].id").value(1))
-                    .andExpect(jsonPath("$[0].nome").value("Ana Souza"))
-                    .andExpect(jsonPath("$[0].email").value("ana.souza@unibus.com"))
-                    // enums trafegam em minúsculas, como o frontend espera
-                    .andExpect(jsonPath("$[0].perfil").value("estudante"))
-                    .andExpect(jsonPath("$[0].status").value("ativo"))
-                    .andExpect(jsonPath("$[1].perfil").value("motorista"))
-                    .andExpect(jsonPath("$[1].status").value("inativo"));
+                    .andExpect(jsonPath("$.content", hasSize(2)))
+                    .andExpect(jsonPath("$.content[0].id").value(1))
+                    .andExpect(jsonPath("$.content[0].nome").value("Ana Souza"))
+                    .andExpect(jsonPath("$.content[0].email").value("ana.souza@unibus.com"))
+                    .andExpect(jsonPath("$.content[0].perfil").value("estudante"))
+                    .andExpect(jsonPath("$.content[0].status").value("ativo"))
+                    .andExpect(jsonPath("$.content[1].perfil").value("motorista"))
+                    .andExpect(jsonPath("$.content[1].status").value("inativo"))
+                    .andExpect(jsonPath("$.totalElements").value(2))
+                    .andExpect(jsonPath("$.totalPages").value(1))
+                    .andExpect(jsonPath("$.size").value(10))
+                    .andExpect(jsonPath("$.number").value(0));
         }
 
         @Test
-        @DisplayName("retorna 200 com lista vazia quando não há usuários")
-        void deveRetornar200ComListaVazia() throws Exception {
-            given(usuarioService.listarTodos()).willReturn(List.of());
+        @DisplayName("repassa parâmetros page e size mantendo ordenação padrão por id")
+        void deveRepassarParametrosDePaginacaoComOrdenacaoPadraoPorId() throws Exception {
+            Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.ASC, "id"));
+            given(usuarioService.listarTodos(any(Pageable.class)))
+                    .willReturn(new PageImpl<>(List.of(ana()), pageable, 3));
+
+            mockMvc.perform(get(URL).param("page", "0").param("size", "2"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content", hasSize(1)))
+                    .andExpect(jsonPath("$.totalElements").value(3))
+                    .andExpect(jsonPath("$.totalPages").value(2))
+                    .andExpect(jsonPath("$.size").value(2))
+                    .andExpect(jsonPath("$.number").value(0));
+
+            ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+            verify(usuarioService).listarTodos(captor.capture());
+            assertThat(captor.getValue().getPageNumber()).isZero();
+            assertThat(captor.getValue().getPageSize()).isEqualTo(2);
+            assertThat(captor.getValue().getSort()).isEqualTo(Sort.by(Sort.Direction.ASC, "id"));
+        }
+
+        @Test
+        @DisplayName("retorna 200 com página vazia quando não há usuários")
+        void deveRetornar200ComPaginaVazia() throws Exception {
+            Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+            given(usuarioService.listarTodos(any(Pageable.class))).willReturn(Page.empty(pageable));
 
             mockMvc.perform(get(URL))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$", hasSize(0)));
+                    .andExpect(jsonPath("$.content", hasSize(0)))
+                    .andExpect(jsonPath("$.totalElements").value(0));
         }
     }
 
