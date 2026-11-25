@@ -241,7 +241,11 @@ class UsuarioControllerTest {
                     .andExpect(jsonPath("$.detalhes", hasItem(
                             "O campo 'nome' é obrigatório e deve ter entre 2 e 100 caracteres.")))
                     .andExpect(jsonPath("$.detalhes", hasItem(
-                            "O campo 'email' é obrigatório e deve ter um formato válido (até 254 caracteres).")));
+                            "O campo 'email' é obrigatório e deve ter um formato válido (até 254 caracteres).")))
+                    .andExpect(jsonPath("$.campos.nome").value(
+                            "O campo 'nome' é obrigatório e deve ter entre 2 e 100 caracteres."))
+                    .andExpect(jsonPath("$.campos.email").value(
+                            "O campo 'email' é obrigatório e deve ter um formato válido (até 254 caracteres)."));
 
             verify(usuarioService, never()).criar(any());
         }
@@ -251,7 +255,11 @@ class UsuarioControllerTest {
         void deveRetornar400QuandoFaltamTodosOsCampos() throws Exception {
             mockMvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON).content("{}"))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detalhes", hasSize(4)));
+                    .andExpect(jsonPath("$.detalhes", hasSize(4)))
+                    .andExpect(jsonPath("$.campos.nome").exists())
+                    .andExpect(jsonPath("$.campos.email").exists())
+                    .andExpect(jsonPath("$.campos.perfil").exists())
+                    .andExpect(jsonPath("$.campos.status").exists());
 
             verify(usuarioService, never()).criar(any());
         }
@@ -352,7 +360,11 @@ class UsuarioControllerTest {
                     .andExpect(jsonPath("$.detalhes", hasItem(
                             "O campo 'perfil' é obrigatório e deve ser um dos valores: estudante, motorista, admin.")))
                     .andExpect(jsonPath("$.detalhes", hasItem(
-                            "O campo 'status' é obrigatório e deve ser um dos valores: ativo, inativo, pendente.")));
+                            "O campo 'status' é obrigatório e deve ser um dos valores: ativo, inativo, pendente.")))
+                    .andExpect(jsonPath("$.campos.perfil").value(
+                            "O campo 'perfil' é obrigatório e deve ser um dos valores: estudante, motorista, admin."))
+                    .andExpect(jsonPath("$.campos.status").value(
+                            "O campo 'status' é obrigatório e deve ser um dos valores: ativo, inativo, pendente."));
 
             verify(usuarioService, never()).atualizar(any(), any());
         }
@@ -418,6 +430,25 @@ class UsuarioControllerTest {
         void deleteNaColecaoDeveRetornar405() throws Exception {
             mockMvc.perform(delete(URL))
                     .andExpect(status().isMethodNotAllowed());
+        }
+    }
+
+    @Nested
+    @DisplayName("Erros internos inesperados (500)")
+    class ErrosInternos {
+
+        @Test
+        @DisplayName("retorna 500 com ErroResponse padronizado sem expor detalhes internos da exceção")
+        void deveRetornar500QuandoOcorreErroInesperado() throws Exception {
+            given(usuarioService.buscarPorId(1L))
+                    .willThrow(new RuntimeException("Falha interna confidencial de pool JDBC"));
+
+            mockMvc.perform(get(URL + "/1"))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(jsonPath("$.status").value(500))
+                    .andExpect(jsonPath("$.erro").value("Erro interno inesperado no servidor."))
+                    .andExpect(jsonPath("$.detalhes", hasSize(0)))
+                    .andExpect(jsonPath("$.campos").doesNotExist());
         }
     }
 }
