@@ -7,11 +7,11 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Libera o CORS para que o frontend (outro domínio, ex.: Vercel) consiga chamar a API pelo navegador.
+ * Configuração de CORS para permitir requisições cross-origin do frontend à API.
  *
- * <p>As origens permitidas vêm da propriedade {@code app.cors.allowed-origins}, preenchida pela
- * variável de ambiente {@code CORS_ALLOWED_ORIGINS} (lista separada por vírgulas). Padrões como
- * {@code https://*.vercel.app} também são aceitos.</p>
+ * <p>As origens permitidas são carregadas da propriedade {@code app.cors.allowed-origins},
+ * definida via variável de ambiente {@code CORS_ALLOWED_ORIGINS} (lista separada por vírgulas,
+ * com suporte a padrões de subdomínio).</p>
  */
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
@@ -19,7 +19,6 @@ public class CorsConfig implements WebMvcConfigurer {
     private final String[] origensPermitidas;
 
     public CorsConfig(@Value("${app.cors.allowed-origins}") String origens) {
-        // Separa por vírgula e descarta espaços/entradas vazias (ex.: "a.com, b.com,")
         this.origensPermitidas = Arrays.stream(origens.split(","))
                 .map(String::trim)
                 .filter(origem -> !origem.isEmpty())
@@ -32,6 +31,6 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns(origensPermitidas)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .maxAge(3600); // o navegador pode reutilizar o preflight por 1 hora
+                .maxAge(3600);
     }
 }

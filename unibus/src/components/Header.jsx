@@ -5,7 +5,6 @@ import Navbar from "./Navbar";
 const logo = `${import.meta.env.BASE_URL}favicon.svg`;
 
 export default function Header() {
-  // O botão fica aqui e o estado é repassado à Navbar
   const [menuAberto, setMenuAberto] = useState(false);
 
   return (

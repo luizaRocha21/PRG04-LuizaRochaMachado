@@ -21,9 +21,6 @@ export default function Hero() {
       <Link to="/como-funciona" className="botao">
         Conhecer o projeto →
       </Link>
-      <Link to="/sandbox" className="botao-secundario">
-        Ir para o SandBox
-      </Link>
     </section>
   );
 }

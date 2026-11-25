@@ -1,4 +1,3 @@
-// Cards de destaque da página inicial
 export const destaques = [
   {
     id: 1,

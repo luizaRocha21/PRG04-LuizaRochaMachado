@@ -1,12 +1,12 @@
-// Cor do selo conforme o status do usuário
 const estilos = {
-  Ativo: "bg-success",
-  Inativo: "bg-secondary",
-  Pendente: "bg-warning text-dark",
+  ativo: "bg-success",
+  inativo: "bg-secondary",
+  pendente: "bg-warning text-dark",
 };
 
 export default function StatusBadge({ status }) {
+  const chave = typeof status === "string" ? status.toLowerCase() : "";
   return (
-    <span className={`badge ${estilos[status] ?? "bg-secondary"}`}>{status}</span>
+    <span className={`badge ${estilos[chave] ?? "bg-secondary"}`}>{status}</span>
   );
 }

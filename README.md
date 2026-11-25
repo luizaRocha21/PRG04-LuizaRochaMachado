@@ -1,110 +1,100 @@
 # UniBus
 
-Aplicação web do **UniBus**, uma plataforma de transporte universitário com rastreio em tempo real, motoristas verificados e avisos instantâneos para estudantes.
+Plataforma web de transporte universitário voltada ao acompanhamento de rotas, consulta de horários e gerenciamento administrativo de usuários (estudantes, motoristas e administradores).
 
-Projeto acadêmico da disciplina **PRG04 - PW**. A interface foi construída em **React**, organizada em componentes reutilizáveis, com navegação entre páginas feita pelo **React Router DOM**. Versões anteriores do projeto eram em HTML, CSS e JavaScript puros.
+Projeto desenvolvido na disciplina **PRG04 - Programação Web**.
 
-## Páginas
+---
 
-| Rota             | Página             | Conteúdo                                                        |
-| ---------------- | ------------------ | --------------------------------------------------------------- |
-| `/`              | Início             | Apresentação, destaques do serviço e links para as demais páginas |
-| `/como-funciona` | Como funciona      | Passo a passo do embarque e galeria de rotas por horário        |
-| `/paleta-cores`  | Paleta de cores    | Paleta adotada no projeto e fontes utilizadas                   |
-| `/sandbox`       | SandBox            | Página de testes com áudio e vídeo incorporados                 |
-| `/login`         | Login              | Formulário com validação (autenticação fictícia)                |
-| `/admin`         | Painel administrativo | Tabela de usuários cadastrados (dados fictícios)             |
+## Arquitetura e Tecnologias
 
-Endereços inexistentes exibem uma página de "Página não encontrada".
+O sistema é dividido em uma aplicação SPA (Single Page Application) no frontend e uma API RESTful no backend:
 
-## Tecnologias
+- **Frontend (`unibus/`)**: React 19, React Router DOM 7, Vite 8, Bootstrap 5 e CSS customizado com abordagem mobile-first. Hospedado na **Vercel**.
+- **Backend (`backend/`)**: Java 21, Spring Boot 4.2 (Spring Web, Spring Data JPA, Bean Validation), empacotado em container Docker e hospedado no **Render**.
+- **Banco de Dados**: PostgreSQL gerenciado no **Supabase** (ambiente de produção) e H2 Database em memória (desenvolvimento local e testes automatizados).
 
-- [React](https://react.dev) 19
-- [React Router DOM](https://reactrouter.com) 7
-- [Vite](https://vite.dev) 8
-- [Bootstrap](https://getbootstrap.com) 5 (grid, cards, tabela e formulário)
-- CSS próprio com variáveis e abordagem mobile-first
-- Fontes Archivo e Inter (Google Fonts)
+### API em Produção
 
-## Componentes
+- **Base URL**: [https://unibus-api-i31f.onrender.com](https://unibus-api-i31f.onrender.com)
+- **Recurso de Usuários**: `https://unibus-api-i31f.onrender.com/api/usuarios`
 
-| Componente        | Descrição                                                         |
-| ----------------- | ----------------------------------------------------------------- |
-| `Layout`          | Estrutura comum às páginas: cabeçalho, conteúdo da rota e rodapé  |
-| `Header`          | Cabeçalho com logotipo, título e botão do menu                    |
-| `Navbar`          | Menu de navegação entre as páginas (abre e fecha no mobile)       |
-| `Footer`          | Rodapé com informações de autoria                                 |
-| `Hero`            | Seção de apresentação da página inicial                           |
-| `FeatureCard`     | Card de destaque da página inicial                                |
-| `PageLinks`       | Lista de links "Explore o projeto"                                |
-| `StepList`        | Lista com o passo a passo do embarque                             |
-| `RouteGallery`    | Galeria que troca imagem e legenda da rota ao clicar no botão     |
-| `ColorSwatch`     | Amostra de uma cor da paleta                                      |
-| `FontTable`       | Tabela com as fontes do projeto                                   |
-| `MediaBlock`      | Bloco com título e descrição para mídia (áudio e vídeo)           |
-| `LoginForm`       | Formulário de autenticação com validação dos campos               |
-| `UserTable`       | Tabela de usuários do painel administrativo                       |
-| `StatusBadge`     | Selo colorido de acordo com o status do usuário                   |
-| `ScrollToTop`     | Retorna ao topo da página a cada troca de rota                    |
+---
 
-O menu, a galeria de rotas e o formulário de login usam estado (`useState`) e tratamento de eventos; mensagens de erro, estado do menu e cor dos selos são exibidos de forma condicional.
+## Estrutura do Repositório
 
-## Estrutura do projeto
-
-```
-unibus/
-├── index.html              → documento base (fontes e ponto de montagem do React)
-├── package.json            → dependências e scripts
-├── vite.config.js          → configuração do Vite
-├── vercel.json             → redireciona todas as rotas para index.html (Vercel)
-├── public/
-│   ├── favicon.svg         → ícone da aba e logotipo do cabeçalho
-│   └── _redirects          → mesma regra de redirecionamento para o Netlify
-└── src/
-    ├── main.jsx            → ponto de entrada; ativa o React Router
-    ├── App.jsx             → definição das rotas
-    ├── components/         → componentes reutilizáveis
-    ├── pages/              → uma página por rota
-    ├── data/               → dados exibidos nas páginas (menu, rotas, cores, usuários…)
-    ├── hooks/
-    │   └── useTitulo.js    → define o título da aba para cada página
-    ├── styles/
-    │   ├── global.css      → paleta, tipografia, cabeçalho/menu e responsividade
-    │   ├── como-funciona.css
-    │   ├── paleta.css
-    │   ├── sandbox.css
-    │   └── login.css
-    └── assets/
-        └── images/         → ilustrações das rotas (manhã, tarde e noite)
+```text
+├── render.yaml                 # Especificação de deploy do backend no Render
+├── backend/                    # API REST em Java + Spring Boot
+│   ├── Dockerfile              # Build multi-stage da imagem Docker
+│   ├── pom.xml                 # Dependências e configuração do Maven
+│   ├── README.md               # Documentação técnica da API
+│   └── src/
+│       ├── main/
+│       │   ├── java/com/unibus/backend/
+│       │   │   ├── config/     # Configuração de CORS
+│       │   │   ├── controller/ # Endpoints REST
+│       │   │   ├── dto/        # Objetos de transferência de dados
+│       │   │   ├── exception/  # Exceções de domínio e tratamento global HTTP
+│       │   │   ├── model/      # Entidades JPA e enumerações
+│       │   │   ├── repository/ # Repositórios Spring Data JPA
+│       │   │   └── service/    # Regras de negócio e controle transacional
+│       │   └── resources/      # Perfis de configuração (default, local e prod)
+│       └── test/               # Testes unitários, de fatia e de integração
+└── unibus/                     # Aplicação frontend em React + Vite
+    ├── index.html              # Documento HTML principal
+    ├── package.json            # Dependências e scripts do frontend
+    ├── vite.config.js          # Configuração de build do Vite
+    ├── vercel.json             # Regras de roteamento SPA na Vercel
+    ├── .env.example            # Modelo de variáveis de ambiente do frontend
+    ├── public/
+    │   └── favicon.svg         # Ícone e logotipo da aplicação
+    └── src/
+        ├── main.jsx            # Inicialização do React e provedor de rotas
+        ├── App.jsx             # Mapeamento das rotas da interface
+        ├── assets/images/      # Ilustrações vetoriais das rotas por turno
+        ├── components/         # Componentes reutilizáveis de interface
+        ├── data/               # Dados estáticos de apoio da interface
+        ├── hooks/              # Hooks customizados (useTitulo)
+        ├── pages/              # Páginas da aplicação (Home, ComoFunciona, PaletaCores, Login, Admin, NotFound)
+        └── styles/             # Folhas de estilo globais e modulares
 ```
 
-## Backend (API REST)
+---
 
-O painel administrativo consome uma API REST de usuários feita com **Spring Boot**, **Spring Data JPA** e
-**PostgreSQL (Supabase)**, hospedada no **Render**. O código fica na pasta `backend/`:
+## Rotas do Frontend
 
-```
-backend/
-├── pom.xml              → dependências (Spring Web, Spring Data JPA, validação, PostgreSQL, H2)
-├── Dockerfile           → imagem usada no deploy do Render
-├── src/main/java/com/unibus/backend/
-│   ├── controller/      → endpoints REST
-│   ├── service/         → regras de negócio
-│   ├── repository/      → acesso ao banco (Spring Data JPA)
-│   ├── model/           → entidade e enums
-│   ├── dto/             → objetos de entrada e saída
-│   ├── exception/       → exceções e tratamento de erros HTTP
-│   └── config/          → CORS
-└── src/test/java/...    → testes (controller, serviço, repositório e integração)
-```
+| Rota             | Página                | Descrição                                                                 |
+| ---------------- | --------------------- | ------------------------------------------------------------------------- |
+| `/`              | Início                | Apresentação da plataforma, destaques do serviço e navegação rápida       |
+| `/como-funciona` | Como funciona         | Etapas do fluxo de embarque e galeria de rotas por turno                  |
+| `/paleta-cores`  | Paleta de cores       | Documentação visual das cores e da tipografia aplicadas no sistema        |
+| `/login`         | Login                 | Formulário de acesso com validação de campos                              |
+| `/admin`         | Painel administrativo | Cadastro, listagem e exclusão de usuários integrados à API REST           |
 
-Para rodar localmente (JDK 21, sem precisar de banco instalado):
+---
+
+## Execução Local
+
+### 1. Backend (API REST)
+
+Requisito: **JDK 21**. Por padrão, a aplicação executa sob o perfil `local`, utilizando banco H2 em memória sem necessidade de configuração externa.
 
 ```bash
 cd backend
-./mvnw spring-boot:run   # API em http://localhost:8080
-./mvnw test              # executa os testes
+./mvnw spring-boot:run
 ```
 
-Endpoints, testes e o passo a passo de deploy (Supabase + Render) estão em [`backend/README.md`](backend/README.md).
-O frontend lê a URL da API na variável `VITE_API_URL` (veja `unibus/.env.example`).
+A API ficará disponível em `http://localhost:8080`.
+
+### 2. Frontend (React + Vite)
+
+Requisito: **Node.js 20+**. As variáveis de ambiente utilizadas pelo frontend estão documentadas em `unibus/.env.example` (por padrão, `VITE_API_URL=http://localhost:8080/api/usuarios`).
+
+```bash
+cd unibus
+npm install
+npm run dev
+```
+
+Documentação detalhada sobre endpoints, contratos JSON, perfis de execução e variáveis de ambiente do servidor está disponível em [`backend/README.md`](backend/README.md).

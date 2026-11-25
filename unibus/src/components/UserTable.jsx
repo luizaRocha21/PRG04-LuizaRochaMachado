@@ -15,26 +15,34 @@ export default function UserTable({ usuarios, onDelete }) {
           </tr>
         </thead>
         <tbody>
-          {usuarios.map((usuario) => (
-            <tr key={usuario.id}>
-              <td>{usuario.id}</td>
-              <td>{usuario.nome}</td>
-              <td>{usuario.email}</td>
-              <td>{usuario.perfil}</td>
-              <td>
-                <StatusBadge status={usuario.status} />
-              </td>
-              <td>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={() => onDelete(usuario.id)}
-                >
-                  Excluir
-                </button>
+          {usuarios.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="text-center text-muted py-3">
+                Nenhum usuário cadastrado.
               </td>
             </tr>
-          ))}
+          ) : (
+            usuarios.map((usuario) => (
+              <tr key={usuario.id}>
+                <td>{usuario.id}</td>
+                <td>{usuario.nome}</td>
+                <td>{usuario.email}</td>
+                <td>{usuario.perfil}</td>
+                <td>
+                  <StatusBadge status={usuario.status} />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => onDelete(usuario.id)}
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

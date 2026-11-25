@@ -28,10 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
- * Testes unitários do {@link UsuarioService}.
- *
- * <p>Sem Spring e sem banco: o repositório é um mock do Mockito. O foco é a regra de negócio
- * (id inexistente, e-mail único, substituição completa dos dados).</p>
+ * Testes unitários do {@link UsuarioService} com {@link UsuarioRepository} simulado via Mockito.
  */
 @ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
@@ -42,7 +39,7 @@ class UsuarioServiceTest {
     @InjectMocks
     private UsuarioService usuarioService;
 
-    /** Cria uma entidade já "persistida" (com id), como se tivesse vindo do banco. */
+    /** Instancia uma entidade com identificador preenchido para simular registro persistido. */
     private static Usuario usuarioPersistido(Long id, String nome, String email, Perfil perfil, StatusUsuario status) {
         Usuario usuario = new Usuario(nome, email, perfil, status);
         ReflectionTestUtils.setField(usuario, "id", id);
@@ -53,9 +50,6 @@ class UsuarioServiceTest {
         return new UsuarioRequest("Ana Souza", "ana@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO);
     }
 
-    // ---------------------------------------------------------------------------------------
-    // listarTodos
-    // ---------------------------------------------------------------------------------------
     @Test
     @DisplayName("listarTodos converte as entidades em DTOs, ordenadas pelo id")
     void listarTodos_deveRetornarDtosOrdenadosPeloId() {
@@ -78,9 +72,6 @@ class UsuarioServiceTest {
         assertThat(usuarioService.listarTodos()).isEmpty();
     }
 
-    // ---------------------------------------------------------------------------------------
-    // buscarPorId
-    // ---------------------------------------------------------------------------------------
     @Test
     @DisplayName("buscarPorId retorna o usuário quando o id existe")
     void buscarPorId_deveRetornarOUsuario() {
@@ -103,14 +94,10 @@ class UsuarioServiceTest {
                 .hasMessage("Usuário com id 99 não encontrado.");
     }
 
-    // ---------------------------------------------------------------------------------------
-    // criar
-    // ---------------------------------------------------------------------------------------
     @Test
     @DisplayName("criar grava o usuário e devolve o DTO com o id gerado")
     void criar_deveSalvarEDevolverOUsuarioCriado() {
         when(usuarioRepository.existsByEmail("ana@unibus.com")).thenReturn(false);
-        // simula o banco: devolve a própria entidade, agora com id
         when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocacao -> {
             Usuario salvo = invocacao.getArgument(0);
             ReflectionTestUtils.setField(salvo, "id", 10L);
@@ -142,9 +129,6 @@ class UsuarioServiceTest {
         verify(usuarioRepository, never()).save(any());
     }
 
-    // ---------------------------------------------------------------------------------------
-    // atualizar
-    // ---------------------------------------------------------------------------------------
     @Test
     @DisplayName("atualizar substitui todos os campos do usuário existente")
     void atualizar_deveSubstituirTodosOsCampos() {
@@ -160,7 +144,6 @@ class UsuarioServiceTest {
 
         assertThat(resultado)
                 .isEqualTo(new UsuarioResponse(5L, "Nome Novo", "novo@unibus.com", Perfil.MOTORISTA, StatusUsuario.ATIVO));
-        // a entidade gerenciada foi realmente alterada
         assertThat(existente.getNome()).isEqualTo("Nome Novo");
         assertThat(existente.getEmail()).isEqualTo("novo@unibus.com");
         assertThat(existente.getPerfil()).isEqualTo(Perfil.MOTORISTA);
@@ -192,9 +175,6 @@ class UsuarioServiceTest {
         verify(usuarioRepository, never()).save(any());
     }
 
-    // ---------------------------------------------------------------------------------------
-    // remover
-    // ---------------------------------------------------------------------------------------
     @Test
     @DisplayName("remover exclui o usuário quando o id existe")
     void remover_deveExcluirQuandoExiste() {

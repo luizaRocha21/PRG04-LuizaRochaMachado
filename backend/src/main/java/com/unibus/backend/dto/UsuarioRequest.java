@@ -9,14 +9,13 @@ import jakarta.validation.constraints.Size;
 import java.util.Locale;
 
 /**
- * Corpo das requisições POST (criar) e PUT (atualizar) de usuários.
+ * DTO de entrada para criação (POST) e atualização (PUT) de usuários.
  *
- * <p>Os dados são normalizados já na construção: o nome perde espaços nas pontas e o e-mail
- * é gravado em minúsculas. Como a validação roda depois da desserialização, ela enxerga o
- * valor já normalizado (mesmo comportamento do backend anterior).</p>
+ * <p>Os dados são normalizados no construtor compacto antes da execução do Bean Validation:
+ * remoção de espaços extremidades no nome e conversão do e-mail para letras minúsculas.</p>
  *
- * <p>Todas as mensagens de um mesmo campo são iguais de propósito: assim, quando mais de uma
- * regra falha (ex.: nome vazio), o cliente recebe uma única mensagem por campo.</p>
+ * <p>As anotações de um mesmo campo compartilham a mesma mensagem para garantir o retorno
+ * de uma única mensagem consolidada por campo inválido.</p>
  */
 public record UsuarioRequest(
 

@@ -5,10 +5,8 @@ import com.unibus.backend.model.StatusUsuario;
 import com.unibus.backend.model.Usuario;
 
 /**
- * Representação de um usuário devolvida pela API.
- *
- * <p>Exemplo de JSON: {@code {"id":1,"nome":"Ana","email":"ana@unibus.com",
- * "perfil":"estudante","status":"ativo"}}. A entidade JPA nunca é exposta diretamente.</p>
+ * DTO de saída que representa um usuário nas respostas da API, desacoplando
+ * o contrato JSON da entidade de persistência {@link Usuario}.
  */
 public record UsuarioResponse(
         Long id,

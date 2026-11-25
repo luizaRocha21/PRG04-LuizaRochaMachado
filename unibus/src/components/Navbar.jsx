@@ -1,7 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { itensMenu } from "../data/menu";
 
-// NavLink marca o link da rota atual com aria-current="page"
 export default function Navbar({ aberto, aoNavegar }) {
   return (
     <nav id="menu" aria-label="Navegação principal">

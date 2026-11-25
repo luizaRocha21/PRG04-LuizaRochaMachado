@@ -15,10 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 
 /**
- * Testes do {@link UsuarioRepository} com um banco H2 em memória (@DataJpaTest).
- *
- * <p>Sobe apenas a camada JPA (entidades + repositórios). Cada teste roda em uma transação que é
- * desfeita ao final, então um teste nunca enxerga os dados do outro.</p>
+ * Testes da camada de persistência ({@link UsuarioRepository}) com banco H2 em memória ({@link DataJpaTest}).
  */
 @DataJpaTest
 class UsuarioRepositoryTest {
@@ -70,7 +67,6 @@ class UsuarioRepositoryTest {
         Usuario ana = salvar("Ana", "ana@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO);
         Usuario bruno = salvar("Bruno", "bruno@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO);
 
-        // o e-mail da Ana só "conta" como conflito para quem NÃO é a Ana
         assertThat(usuarioRepository.existsByEmailAndIdNot("ana@unibus.com", ana.getId())).isFalse();
         assertThat(usuarioRepository.existsByEmailAndIdNot("ana@unibus.com", bruno.getId())).isTrue();
     }

@@ -119,8 +119,10 @@ img {
 #menu .menu {
   list-style: none;
   display: none;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
   width: 100%;
   margin: 10px 0 0;
   padding: 14px 0 4px;
@@ -131,11 +133,17 @@ img {
   display: flex;
 }
 
+#menu .menu li {
+  display: inline-flex;
+  align-items: center;
+}
+
 #menu .menu a {
+  display: inline-block;
   color: var(--creme);
   text-decoration: none;
   font-size: 0.95rem;
-  padding: 8px 2px;
+  padding: 6px 2px;
   border-bottom: 2px solid transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
 }

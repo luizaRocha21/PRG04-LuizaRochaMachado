@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
         return montarResposta(HttpStatus.BAD_REQUEST, "Dados inválidos.", detalhes);
     }
 
-    /** 400: JSON malformado ou com valor inválido (ex.: perfil que não existe). */
+    /** 400: corpo JSON malformado ou com valor de enum inválido. */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroResponse> tratarCorpoIlegivel(HttpMessageNotReadableException ex) {
         return montarResposta(HttpStatus.BAD_REQUEST, "Corpo da requisição inválido.", List.of(
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
                         + "e status (ativo, inativo, pendente)."));
     }
 
-    /** 400: um parâmetro da URL tem tipo errado (ex.: GET /api/usuarios/abc, quando o id é numérico). */
+    /** 400: parâmetro de rota ou consulta com tipo incompatível. */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErroResponse> tratarParametroInvalido(MethodArgumentTypeMismatchException ex) {
         return montarResposta(HttpStatus.BAD_REQUEST, "Parâmetro inválido.",

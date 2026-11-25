@@ -21,19 +21,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="secao container" aria-labelledby="titulo-sobre">
-        <div className="grade-conteudo">
-          <article className="cartao">
-            <h2 id="titulo-sobre">Sobre esta versão</h2>
-            <p>
-              Esta versão do projeto é uma aplicação React, com navegação entre
-              páginas feita pelo React Router e Bootstrap para grid e
-              componentes.
-            </p>
-          </article>
-
-          <PageLinks />
-        </div>
+      <section className="secao container">
+        <PageLinks />
       </section>
     </>
   );

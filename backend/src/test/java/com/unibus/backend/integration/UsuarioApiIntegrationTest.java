@@ -24,11 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 /**
- * Teste de integração da API: requisições HTTP reais (MockMvc) atravessando controller, serviço,
- * repositório e um banco H2 em memória, sem nenhum mock.
+ * Testes de integração ponta a ponta da API utilizando {@link MockMvc} e banco H2 em memória.
  *
- * <p>Complementa os testes por camada: aqui se confirma que as peças funcionam juntas
- * (por exemplo, a regra de e-mail único e a configuração de CORS).</p>
+ * <p>Valida a integração entre controller, serviço, repositório, restrições de unicidade
+ * e configuração de CORS.</p>
  */
 @SpringBootTest(properties = "app.cors.allowed-origins=http://localhost:3000")
 @AutoConfigureMockMvc
@@ -44,7 +43,6 @@ class UsuarioApiIntegrationTest {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    /** Começa cada teste com a tabela vazia. */
     @BeforeEach
     void limparBanco() {
         usuarioRepository.deleteAll();
@@ -71,10 +69,8 @@ class UsuarioApiIntegrationTest {
     @Test
     @DisplayName("fluxo completo: criar, buscar, listar, atualizar e excluir")
     void fluxoCompleto() throws Exception {
-        // POST -> 201
         long id = criarPelaApi("Ana Souza", "ana@unibus.com", "estudante", "ativo");
 
-        // GET por id -> 200
         mockMvc.perform(get(URL + "/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
@@ -83,13 +79,11 @@ class UsuarioApiIntegrationTest {
                 .andExpect(jsonPath("$.perfil").value("estudante"))
                 .andExpect(jsonPath("$.status").value("ativo"));
 
-        // GET lista -> 200 com 1 item
         mockMvc.perform(get(URL))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id").value(id));
 
-        // PUT -> 200 com os novos dados
         mockMvc.perform(put(URL + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json("Ana Souza Lima", "ana.lima@unibus.com", "admin", "inativo")))
@@ -100,13 +94,11 @@ class UsuarioApiIntegrationTest {
                 .andExpect(jsonPath("$.perfil").value("admin"))
                 .andExpect(jsonPath("$.status").value("inativo"));
 
-        // a alteração foi mesmo gravada
         mockMvc.perform(get(URL + "/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Ana Souza Lima"))
                 .andExpect(jsonPath("$.status").value("inativo"));
 
-        // DELETE -> 204; depois disso o recurso não existe mais
         mockMvc.perform(delete(URL + "/" + id)).andExpect(status().isNoContent());
         mockMvc.perform(get(URL + "/" + id)).andExpect(status().isNotFound());
         mockMvc.perform(delete(URL + "/" + id)).andExpect(status().isNotFound());
@@ -205,13 +197,9 @@ class UsuarioApiIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    // ---------------------------------------------------------------------------------------
-    // CORS: o frontend roda em outro domínio e precisa ser autorizado
-    // ---------------------------------------------------------------------------------------
     @Test
     @DisplayName("CORS: preflight de uma origem autorizada recebe 200 e os cabeçalhos Access-Control-*")
     void cors_preflightDeOrigemAutorizada() throws Exception {
-        // É o que o navegador envia antes de um POST com corpo JSON vindo de outro domínio
         mockMvc.perform(options(URL)
                         .header("Origin", ORIGEM_FRONTEND)
                         .header("Access-Control-Request-Method", "POST")

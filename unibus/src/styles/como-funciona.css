@@ -10,6 +10,12 @@
   box-shadow: var(--sombra);
 }
 
+.imagem-dinamica-wrap p {
+  margin: 14px 0 0;
+  font-weight: 600;
+  text-align: center;
+}
+
 .imagem-dinamica-wrap button {
   margin-top: 16px;
 }

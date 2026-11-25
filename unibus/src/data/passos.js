@@ -1,4 +1,3 @@
-// Passo a passo do embarque
 export const passos = [
   { id: 1, titulo: "1. Cadastro", texto: "o estudante cria sua conta e escolhe sua rota." },
   { id: 2, titulo: "2. Confirmação", texto: "a coordenação valida a matrícula e libera o acesso." },

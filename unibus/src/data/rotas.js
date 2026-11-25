@@ -2,7 +2,6 @@ import manha from "../assets/images/rota-manha.svg";
 import tarde from "../assets/images/rota-tarde.svg";
 import noite from "../assets/images/rota-noite.svg";
 
-// Rotas exibidas na galeria "Frota em diferentes horários"
 export const rotas = [
   {
     src: manha,

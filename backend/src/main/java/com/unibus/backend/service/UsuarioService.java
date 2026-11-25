@@ -23,12 +23,11 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    /** Injeção de dependência pelo construtor (o Spring fornece o repositório). */
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
-    /** Lista todos os usuários, ordenados pelo id. */
+    /** Lista todos os usuários ordenados de forma crescente pelo identificador. */
     @Transactional(readOnly = true)
     public List<UsuarioResponse> listarTodos() {
         return usuarioRepository.findAll(Sort.by("id")).stream()
@@ -37,9 +36,9 @@ public class UsuarioService {
     }
 
     /**
-     * Busca um usuário pelo id.
+     * Busca um usuário pelo identificador.
      *
-     * @throws UsuarioNaoEncontradoException se não existir
+     * @throws UsuarioNaoEncontradoException se o registro não existir
      */
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPorId(Long id) {
@@ -47,13 +46,12 @@ public class UsuarioService {
     }
 
     /**
-     * Cadastra um novo usuário.
+     * Cadastra um novo usuário garantindo a unicidade do e-mail.
      *
      * @throws EmailJaCadastradoException se o e-mail já estiver em uso
      */
     @Transactional
     public UsuarioResponse criar(UsuarioRequest request) {
-        // Regra de negócio: o e-mail identifica o usuário, então não pode se repetir.
         if (usuarioRepository.existsByEmail(request.email())) {
             throw new EmailJaCadastradoException(request.email());
         }
@@ -63,16 +61,16 @@ public class UsuarioService {
     }
 
     /**
-     * Substitui todos os dados de um usuário existente (semântica do PUT).
+     * Substitui todos os dados de um usuário existente (semântica PUT).
      *
-     * @throws UsuarioNaoEncontradoException se o id não existir
-     * @throws EmailJaCadastradoException    se o novo e-mail pertencer a OUTRO usuário
+     * @throws UsuarioNaoEncontradoException se o identificador não existir
+     * @throws EmailJaCadastradoException    se o novo e-mail pertencer a outro usuário
      */
     @Transactional
     public UsuarioResponse atualizar(Long id, UsuarioRequest request) {
         Usuario usuario = buscarEntidade(id);
 
-        // O próprio usuário pode manter o e-mail; só é conflito se outro registro já o usa.
+        // Permite manter o próprio e-mail; bloqueia apenas conflito com outro registro
         if (usuarioRepository.existsByEmailAndIdNot(request.email(), id)) {
             throw new EmailJaCadastradoException(request.email());
         }
@@ -85,9 +83,9 @@ public class UsuarioService {
     }
 
     /**
-     * Remove um usuário.
+     * Remove um usuário pelo identificador.
      *
-     * @throws UsuarioNaoEncontradoException se o id não existir
+     * @throws UsuarioNaoEncontradoException se o identificador não existir
      */
     @Transactional
     public void remover(Long id) {
@@ -97,7 +95,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    /** Busca a entidade ou lança a exceção que vira 404. Reaproveitado por buscar e atualizar. */
+    /** Recupera a entidade pelo identificador ou lança {@link UsuarioNaoEncontradoException}. */
     private Usuario buscarEntidade(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));

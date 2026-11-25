@@ -31,8 +31,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * DELETE  /api/usuarios/{id}   204 No Content   404
  * </pre>
  *
- * <p>O controller só cuida do protocolo HTTP (rotas, verbos, status e cabeçalhos). As regras de
- * negócio ficam no {@link UsuarioService}; as exceções viram respostas de erro no
+ * <p>Responsável pelo protocolo HTTP (rotas, verbos, códigos de status e cabeçalhos). As regras
+ * de negócio são delegadas ao {@link UsuarioService} e o tratamento de exceções ao
  * {@code GlobalExceptionHandler}.</p>
  */
 @RestController
@@ -51,21 +51,20 @@ public class UsuarioController {
         return usuarioService.listarTodos();
     }
 
-    /** GET /api/usuarios/{id}: busca um usuário (200 OK, ou 404 se não existir). */
+    /** GET /api/usuarios/{id}: busca um usuário por identificador (200 OK ou 404 Not Found). */
     @GetMapping("/{id}")
     public UsuarioResponse buscarPorId(@PathVariable("id") Long id) {
         return usuarioService.buscarPorId(id);
     }
 
     /**
-     * POST /api/usuarios: cadastra um usuário.
-     * Responde 201 Created com o recurso criado no corpo e a sua URL no cabeçalho Location.
+     * POST /api/usuarios: cadastra um novo usuário.
+     * Retorna 201 Created com o recurso no corpo e a URI correspondente no cabeçalho Location.
      */
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@Valid @RequestBody UsuarioRequest request) {
         UsuarioResponse criado = usuarioService.criar(request);
 
-        // Monta a URL do novo recurso a partir da requisição atual: .../api/usuarios/{id}
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(criado.id())
@@ -75,9 +74,8 @@ public class UsuarioController {
     }
 
     /**
-     * PUT /api/usuarios/{id}: substitui TODOS os dados do usuário (200 OK).
-     * Responde 404 se o id não existir. Por ser uma substituição completa, todos os campos são
-     * obrigatórios no corpo.
+     * PUT /api/usuarios/{id}: substitui integralmente os dados de um usuário existente (200 OK).
+     * Retorna 404 Not Found caso o identificador não exista.
      */
     @PutMapping("/{id}")
     public UsuarioResponse atualizar(@PathVariable("id") Long id,
@@ -85,7 +83,7 @@ public class UsuarioController {
         return usuarioService.atualizar(id, request);
     }
 
-    /** DELETE /api/usuarios/{id}: remove o usuário. Responde 204 No Content (sem corpo). */
+    /** DELETE /api/usuarios/{id}: remove um usuário existente (204 No Content). */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable("id") Long id) {

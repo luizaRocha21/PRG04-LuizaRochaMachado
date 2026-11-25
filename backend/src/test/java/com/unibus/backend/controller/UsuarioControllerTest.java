@@ -40,12 +40,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Testes do {@link UsuarioController}, camada web isolada (@WebMvcTest).
+ * Testes da camada web isolada ({@link UsuarioController}) utilizando {@link WebMvcTest}.
  *
- * <p>Sobe apenas o Spring MVC (controller + tratador de exceções + validação + JSON). O serviço é
- * substituído por um mock, então aqui se verifica somente o contrato HTTP: rotas, verbos,
- * status codes, cabeçalhos e formato do JSON. Cada método do controller (listar, buscarPorId,
- * criar, atualizar e remover) tem o caminho feliz e os cenários de erro testados.</p>
+ * <p>Valida o contrato HTTP (rotas, verbos, códigos de status, cabeçalhos e serialização JSON)
+ * com {@link UsuarioService} simulado via mock.</p>
  */
 @WebMvcTest(UsuarioController.class)
 class UsuarioControllerTest {
@@ -64,17 +62,12 @@ class UsuarioControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    /** Substitui o serviço real por um mock controlado pelo teste. */
     @MockitoBean
     private UsuarioService usuarioService;
 
     private static UsuarioResponse ana() {
         return new UsuarioResponse(1L, "Ana Souza", "ana.souza@unibus.com", Perfil.ESTUDANTE, StatusUsuario.ATIVO);
     }
-
-    // =========================================================================================
-    // GET /api/usuarios  ->  UsuarioController#listar
-    // =========================================================================================
     @Nested
     @DisplayName("GET /api/usuarios (listar)")
     class Listar {
@@ -111,9 +104,6 @@ class UsuarioControllerTest {
         }
     }
 
-    // =========================================================================================
-    // GET /api/usuarios/{id}  ->  UsuarioController#buscarPorId
-    // =========================================================================================
     @Nested
     @DisplayName("GET /api/usuarios/{id} (buscarPorId)")
     class BuscarPorId {
@@ -157,9 +147,6 @@ class UsuarioControllerTest {
         }
     }
 
-    // =========================================================================================
-    // POST /api/usuarios  ->  UsuarioController#criar
-    // =========================================================================================
     @Nested
     @DisplayName("POST /api/usuarios (criar)")
     class Criar {
@@ -280,9 +267,6 @@ class UsuarioControllerTest {
         }
     }
 
-    // =========================================================================================
-    // PUT /api/usuarios/{id}  ->  UsuarioController#atualizar
-    // =========================================================================================
     @Nested
     @DisplayName("PUT /api/usuarios/{id} (atualizar)")
     class Atualizar {
@@ -301,7 +285,6 @@ class UsuarioControllerTest {
                     .andExpect(jsonPath("$.nome").value("Ana Souza"))
                     .andExpect(jsonPath("$.status").value("ativo"));
 
-            // o corpo da requisição chega ao serviço já convertido para o DTO
             ArgumentCaptor<UsuarioRequest> captor = ArgumentCaptor.forClass(UsuarioRequest.class);
             verify(usuarioService).atualizar(eq(1L), captor.capture());
             assertThat(captor.getValue())
@@ -350,9 +333,6 @@ class UsuarioControllerTest {
         }
     }
 
-    // =========================================================================================
-    // DELETE /api/usuarios/{id}  ->  UsuarioController#remover
-    // =========================================================================================
     @Nested
     @DisplayName("DELETE /api/usuarios/{id} (remover)")
     class Remover {
@@ -379,9 +359,6 @@ class UsuarioControllerTest {
         }
     }
 
-    // =========================================================================================
-    // Verbos HTTP não suportados
-    // =========================================================================================
     @Nested
     @DisplayName("Verbos não suportados")
     class VerbosNaoSuportados {
